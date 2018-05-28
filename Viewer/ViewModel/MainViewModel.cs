@@ -19,21 +19,70 @@ using GalaSoft.MvvmLight.CommandWpf;
 using GalaSoft.MvvmLight.Ioc;
 using GalaSoft.MvvmLight.Messaging;
 using Viewer.Model;
+using Viewer.SR_Aggregated;
 
 namespace Viewer.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
+        ServiceAggregatedClient client = new ServiceAggregatedClient();
+        public ObservableCollection<AggregatedPerson> Filtered
+        {
+            get => _filtered; set
+            {
+                _filtered = value;
+                RaisePropertyChanged();
+            }
+        }
+        private string searchZIP = "";
+        private ObservableCollection<AggregatedPerson> _data;
+        private ObservableCollection<AggregatedPerson> _filtered;
+
+        public ObservableCollection<AggregatedPerson> Data
+        {
+            get => _data; set
+            {
+                _data = value;
+                RaisePropertyChanged();
+            }
+        }
+        public RelayCommand SendBtnClick { get; set; }
+        public RelayCommand ResetBtnClick { get; set; }
+
+        public string SearchZIP
+        {
+            get => searchZIP; set => searchZIP = value;
+        }
 
         public MainViewModel()
         {
-            if (IsInDesignMode)
+            Data = new ObservableCollection<AggregatedPerson>(client.GetAggregatedPersonData());
+            Filtered = new ObservableCollection<AggregatedPerson>(Data);
+
+            SendBtnClick = new RelayCommand(() =>
             {
-                //design mode
-            }
-            else
+                Filtered.Clear();
+                Refresh(SearchZIP);
+            }, () =>
+             {
+                 return !SearchZIP.Equals("") && int.TryParse(SearchZIP, out int x);
+             });
+
+            ResetBtnClick = new RelayCommand(() =>
             {
-                //real life
+                Filtered.Clear();
+                foreach (var item in Data)
+                {
+                    Filtered.Add(item);
+                }
+            });
+        }
+
+        private void Refresh(string zip)
+        {
+            foreach (var item in Data)
+            {
+                if (item.Zip.ToString().Contains(zip))Filtered.Add(item);
             }
         }
     }

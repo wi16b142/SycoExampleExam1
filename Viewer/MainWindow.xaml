@@ -9,15 +9,34 @@
         Width="525"
         Title="App by Sascha Böck"
         DataContext="{Binding Main, Source={StaticResource Locator}}">
-    
+
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition/>
-            <RowDefinition/>
+            <RowDefinition Height="61*"/>
+            <RowDefinition Height="260*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
+
+        <Button Command="{Binding ResetBtnClick}" Height="30" Width="40" Content="Reset" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+        <Label Grid.Column="1" Content="Search" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,200,0"/>
+        <TextBox Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,40,0" Width="150" Height="30" Text="{Binding SearchZIP, UpdateSourceTrigger=PropertyChanged}"/>
+        <Button Content="Send" Command="{Binding SendBtnClick}" Width="30" Height="30" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+        
+        <DataGrid Grid.Row="1" Grid.ColumnSpan="2" Margin="20" AutoGenerateColumns="False" ItemsSource="{Binding Filtered}" SelectionChanged="DataGrid_SelectionChanged">
+            <DataGrid.Columns>
+                <DataGridTextColumn Binding="{Binding Surname}" ClipboardContentBinding="{x:Null}" Header="Surname"/>
+                <DataGridTextColumn Binding="{Binding Givenname}" ClipboardContentBinding="{x:Null}" Header="Givenname"/>
+                <DataGridTextColumn Binding="{Binding City}" ClipboardContentBinding="{x:Null}" Header="City"/>
+                <DataGridTextColumn Binding="{Binding Street}" ClipboardContentBinding="{x:Null}" Header="Street"/>
+                <DataGridTextColumn Binding="{Binding Zip}" ClipboardContentBinding="{x:Null}" Header="ZIP"/>
+                <DataGridTextColumn Binding="{Binding Id}" ClipboardContentBinding="{x:Null}" Header="ID"/>
+                <DataGridTextColumn Binding="{Binding StudentID}" ClipboardContentBinding="{x:Null}" Header="StudentID"/>
+                <DataGridTextColumn Binding="{Binding IsStudent}" ClipboardContentBinding="{x:Null}" Header="IsStudent"/>
+            </DataGrid.Columns>
+
+        </DataGrid>
     </Grid>
 </Window>
